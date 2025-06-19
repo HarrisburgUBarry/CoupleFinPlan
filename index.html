@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Couple's Budget Planner</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Couple's Budget Planner</h1>
+            <p class="text-secondary">Plan your finances together with comprehensive budgeting tools</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Income Section -->
+            <section class="section" id="income-section">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Monthly Income</h2>
+                        <p class="text-secondary">Enter your individual monthly incomes</p>
+                    </div>
+                    <div class="card__body">
+                        <div class="income-grid">
+                            <div class="income-input">
+                                <label class="form-label" for="partner1-income">Partner 1 Income</label>
+                                <input type="number" id="partner1-income" class="form-control" placeholder="$0" min="0" step="0.01">
+                            </div>
+                            <div class="income-input">
+                                <label class="form-label" for="partner2-income">Partner 2 Income</label>
+                                <input type="number" id="partner2-income" class="form-control" placeholder="$0" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="combined-income">
+                            <h3>Combined Monthly Income: <span id="total-income">$0</span></h3>
+                            <div class="income-breakdown">
+                                <span>Partner 1: <span id="partner1-percentage">0%</span></span>
+                                <span>Partner 2: <span id="partner2-percentage">0%</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Budgeting Method Section -->
+            <section class="section" id="budgeting-method-section">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Choose Your Budgeting Method</h2>
+                        <p class="text-secondary">Select the approach that works best for your relationship</p>
+                    </div>
+                    <div class="card__body">
+                        <div class="budgeting-methods">
+                            <label class="method-option">
+                                <input type="radio" name="budgeting-method" value="50-30-20" checked>
+                                <div class="method-card">
+                                    <h4>50/30/20 Rule</h4>
+                                    <p>50% for needs, 30% for wants, 20% for savings and debt repayment</p>
+                                </div>
+                            </label>
+                            <label class="method-option">
+                                <input type="radio" name="budgeting-method" value="zero-based">
+                                <div class="method-card">
+                                    <h4>Zero-Based Budgeting</h4>
+                                    <p>Every dollar is assigned a specific purpose until income minus expenses equals zero</p>
+                                </div>
+                            </label>
+                            <label class="method-option">
+                                <input type="radio" name="budgeting-method" value="proportional">
+                                <div class="method-card">
+                                    <h4>Proportional by Income</h4>
+                                    <p>Expenses split based on each partner's income percentage</p>
+                                </div>
+                            </label>
+                            <label class="method-option">
+                                <input type="radio" name="budgeting-method" value="custom">
+                                <div class="method-card">
+                                    <h4>Custom Budgeting</h4>
+                                    <p>Set your own percentages for different categories</p>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div id="budget-allocation" class="budget-allocation" style="display: none;">
+                            <h4>Budget Allocation</h4>
+                            <div class="allocation-display">
+                                <div class="allocation-item">
+                                    <span>Needs:</span>
+                                    <span id="needs-amount">$0</span>
+                                    <span id="needs-percentage">(0%)</span>
+                                </div>
+                                <div class="allocation-item">
+                                    <span>Wants:</span>
+                                    <span id="wants-amount">$0</span>
+                                    <span id="wants-percentage">(0%)</span>
+                                </div>
+                                <div class="allocation-item">
+                                    <span>Savings:</span>
+                                    <span id="savings-amount">$0</span>
+                                    <span id="savings-percentage">(0%)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Expense Splitting Method -->
+            <section class="section" id="expense-splitting-section">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Expense Splitting Method</h2>
+                        <p class="text-secondary">Choose how you'll split shared expenses</p>
+                    </div>
+                    <div class="card__body">
+                        <div class="splitting-methods">
+                            <label class="split-option">
+                                <input type="radio" name="splitting-method" value="equal" checked>
+                                <div class="split-card">
+                                    <h4>50/50 Split</h4>
+                                    <p>Each partner pays exactly half of shared expenses</p>
+                                </div>
+                            </label>
+                            <label class="split-option">
+                                <input type="radio" name="splitting-method" value="proportional">
+                                <div class="split-card">
+                                    <h4>Proportional by Income</h4>
+                                    <p>Split expenses based on each partner's income percentage</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Expenses Section -->
+            <section class="section" id="expenses-section">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Monthly Expenses</h2>
+                        <p class="text-secondary">Track your needs, wants, and savings</p>
+                    </div>
+                    <div class="card__body">
+                        <div class="expense-tabs">
+                            <button class="tab-btn active" data-category="needs">Needs</button>
+                            <button class="tab-btn" data-category="wants">Wants</button>
+                            <button class="tab-btn" data-category="savings">Savings</button>
+                        </div>
+                        
+                        <div class="expense-categories">
+                            <div id="needs-expenses" class="expense-category active">
+                                <div class="expense-items"></div>
+                            </div>
+                            <div id="wants-expenses" class="expense-category">
+                                <div class="expense-items"></div>
+                            </div>
+                            <div id="savings-expenses" class="expense-category">
+                                <div class="expense-items"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="expense-summary">
+                            <div class="summary-row">
+                                <span>Total Monthly Expenses:</span>
+                                <span id="total-expenses">$0</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Remaining Budget:</span>
+                                <span id="remaining-budget" class="budget-status">$0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Financial Goals Section -->
+            <section class="section" id="goals-section">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Financial Goals</h2>
+                        <p class="text-secondary">Set and track your savings goals</p>
+                    </div>
+                    <div class="card__body">
+                        <div class="goals-container">
+                            <div class="goal-form">
+                                <h4>Add New Goal</h4>
+                                <div class="form-group">
+                                    <label class="form-label" for="goal-type">Goal Type</label>
+                                    <select id="goal-type" class="form-control">
+                                        <option value="">Select goal type</option>
+                                        <option value="Emergency Fund">Emergency Fund</option>
+                                        <option value="Debt Payoff">Debt Payoff</option>
+                                        <option value="Home Down Payment">Home Down Payment</option>
+                                        <option value="Vacation Fund">Vacation Fund</option>
+                                        <option value="Car Purchase">Car Purchase</option>
+                                        <option value="Wedding Fund">Wedding Fund</option>
+                                        <option value="Retirement">Retirement</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="goal-amount">Target Amount</label>
+                                    <input type="number" id="goal-amount" class="form-control" placeholder="$0" min="0" step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="monthly-contribution">Monthly Contribution</label>
+                                    <input type="number" id="monthly-contribution" class="form-control" placeholder="$0" min="0" step="0.01">
+                                </div>
+                                <button type="button" id="add-goal-btn" class="btn btn--primary">Add Goal</button>
+                            </div>
+                            
+                            <div class="goals-list">
+                                <h4>Your Goals</h4>
+                                <div id="goals-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts and Analytics Section -->
+            <section class="section" id="analytics-section">
+                <div class="analytics-grid">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Expense Breakdown</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="chart-container">
+                                <canvas id="expense-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Budget vs Spending</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="chart-container">
+                                <canvas id="budget-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Goals Progress</h3>
+                        </div>
+                        <div class="card__body">
+                            <div id="goals-progress"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Budget Health</h3>
+                        </div>
+                        <div class="card__body">
+                            <div id="budget-health">
+                                <div class="health-metric">
+                                    <span>Savings Rate:</span>
+                                    <span id="savings-rate">0%</span>
+                                </div>
+                                <div class="health-metric">
+                                    <span>Debt-to-Income:</span>
+                                    <span id="debt-ratio">0%</span>
+                                </div>
+                                <div class="health-metric">
+                                    <span>Emergency Fund:</span>
+                                    <span id="emergency-months">0 months</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tips Section -->
+            <section class="section" id="tips-section">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Budgeting Tips</h2>
+                    </div>
+                    <div class="card__body">
+                        <div id="tips-container"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
